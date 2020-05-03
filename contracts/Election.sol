@@ -11,6 +11,8 @@ contract Election
     }
     // Storing and fetching candidates
     mapping(uint => Candidate) public candidates;
+    // Store a list of voters
+    mapping(address => bool) public voters;
     uint public candidatesCount;
     constructor () public
     {
@@ -21,5 +23,16 @@ contract Election
     {
         candidatesCount++;
         candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+    }
+    function vote(uint _candidateId) public
+    {
+        // Check whether the voter as already voted
+        require(!voters[msg.sender], "Voter should not vote multiple times");
+        // Check whether the candidate is valid
+        require(_candidateId>0 && _candidateId<=candidatesCount, "Invalid candidate");
+        // Record that the voter has voted
+        voters[msg.sender] = true;
+        // Increment the vote count for the candidate
+        candidates[_candidateId].voteCount++;
     }
 }
