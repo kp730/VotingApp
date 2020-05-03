@@ -14,6 +14,7 @@ contract Election
     // Store a list of voters
     mapping(address => bool) public voters;
     uint public candidatesCount;
+    event votedEvent(uint indexed _candidateId);
     constructor () public
     {
         addCandidate("Candidate 1");
@@ -34,5 +35,7 @@ contract Election
         voters[msg.sender] = true;
         // Increment the vote count for the candidate
         candidates[_candidateId].voteCount++;
+        // Trigger the event
+        emit votedEvent(_candidateId);
     }
 }
